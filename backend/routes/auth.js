@@ -1,27 +1,65 @@
 const express = require("express");
-const router = express.Router();
-const User = require("./models/User");
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+const dotenv = require("dotenv");
 
+dotenv.config(); // Load environment variables from the .env file
+
+const router = express.Router();
+
+// Registration route
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
-  const hashed = await bcrypt.hash(password, 10);
-  const user = new User({ username, email, password: hashed });
-  await user.save();
-  res.json({ msg: "User Registered" });
+
+  try {
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    // Create a new user
+    const newUser = new User({
+      username,
+      email,
+      password, // No need to hash here since hashing happens in the pre-save middleware of the User model
+    });
+
+    // Save the new user to the database
+    await newUser.save();
+
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error registering user" });
+  }
 });
 
+// Login route
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) return res.status(400).json({ msg: "User not found" });
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(400).json({ msg: "Wrong password" });
+  try {
+    // Find the user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-  res.json({ token, user });
+    // Use the comparePassword method from the User model
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // Generate JWT token with expiration time of 1 hour
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+    res.status(200).json({ token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error logging in" });
+  }
 });
 
 module.exports = router;
