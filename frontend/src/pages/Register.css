@@ -1,0 +1,86 @@
+/* Register.css */
+
+/* Background for the full page */
+body {
+  background-color: #fff8e1; /* light bluish gray */
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Register form container */
+.register-container {
+  max-width: 500px;
+  width: 100%;
+  padding: 30px 25px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+.register-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #1e3a8a;
+  font-size: 26px;
+}
+
+/* Input fields */
+.register-container input {
+  width: 90%;
+  padding: 12px 14px;
+  margin: 12px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+}
+
+.register-container input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+/* Register button */
+.register-container button {
+  width: 97%;
+  padding: 12px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.register-container button:hover {
+  background-color: #0056b3;
+}
+
+/* Footer text */
+.register-footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.register-footer a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-footer a:hover {
+  text-decoration: underline;
+}
